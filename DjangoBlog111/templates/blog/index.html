@@ -1,0 +1,96 @@
+<style>
+    #article{
+    background-image: url("https://images.unsplash.com/photo-1516541196182-6bdb0516ed27?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60");
+    background-repeat:no-repeat;
+     background-size: cover;
+ }
+ #shadow{
+ box-shadow: 15px 15px lightblue;}
+ #shadow1{
+ box-shadow: 7px 7px lightblue;
+}
+h3 {
+  color: black;
+  text-shadow: 2px 2px 4px lightblue;
+}
+.black{color:black;}
+.post-block{background-image: linear-gradient(#00C9FF, #92FE9D);}
+.post-block{background-image: linear-gradient(#ffffff,#fccadb);}
+
+.responsive {
+  width: 100%;
+  height: auto;
+  border-radius:10px;
+  box-shadow: 10px 10px 5px gray;
+}
+</style>
+{% extends 'base.html' %}
+{% load blog_tags %}
+
+
+{% block meta %}
+    {% get_seo_info as seo_info %}
+    <title>{{ seo_info.title }}—{{ seo_info.sub_title }}A-Z news</title>
+    <meta name="description" content="{{ seo_info.description }}"/>
+    <meta name="keywords" content="{{ seo_info.keywords }}" />
+{% endblock %}
+
+{% block content_left %}
+    <div class="django-panel" id="shadow">
+        <div class="post-list"  >
+            {% for post in posts%}
+                <div class="post-block" id="shadow1">
+                    <div class="post-item">
+                        <div class="post-title" >
+                            <img src="{{post.imageURL}}" class="responsive" alt="...">
+                           <!-- <img id="featured"  class="img-fluid " src="{{post.imageURL}}">-->
+                            <a title="{{ post.title }}" href="{{ post.get_absolute_url }}"><h3>{{ post.title | slice:":1000" }}</h3></a>
+                        </div>
+                        <div class="post-excerpt">
+                            <p class="black">{{ post.excerpt}}......</p>
+                        </div>
+
+                        <div class="post-meta">
+                            <span class="black">Date:{{ post.created_time| date:"d-m-Y" }}</span>
+                            <span class="black">Category:<a href="{% url 'blog:category' post.category.id %}">{{ post.category }}</a></span>
+
+                        </div>
+                        <div class="post-meta" >
+                             <span class="black">Readings({{ post.views }})</span>
+                            <span class="black">Comment({% get_comment_count post %})</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content_paginate %}
+    {% if is_paginated %}
+        <div class="django-panel django-pages">
+            <div class="">
+                <ul class="pagination django-pages-ul">
+                        <li><a href="?page=1"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></a></li>
+
+                        {% if page_obj.has_previous %}
+                            <li><a href="?page={{ page_obj.previous_page_number }}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a></li>
+                        {% else %}
+                            <li><a href=""><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a></li>
+                        {% endif %}
+
+                        <li><span class="page-style" >{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+                        {% if page_obj.has_next %}
+                            <li><a class="page-style" href="?page={{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>
+                        {% else %}
+                            <li><span class="end-page-style page-style"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span></li>
+                        {% endif %}
+
+                        <li><a class="page-style" href="?page={{ page_obj.paginator.num_pages }}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

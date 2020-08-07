@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <title>Registration Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'blog/bootstrap3.3.7/css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'blog/bootstrap3.3.7/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'blog/base.css' %}">
+    <link rel="stylesheet" href="{% static '/blog/css/font-awesome.min.css' %}">
+</head>
+
+<body style="background-color: #29a8d8!important;">
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <form class="form-horizontal" method="POST">
+                <span class="heading">User registration</span>
+                {% csrf_token %}
+                {% for field in reg_form %}
+                    <div class="form-group">
+                        {{ field }}
+                        <i class="{{ field.label }}"></i>
+                        <p class="text-danger">{{ field.errors.as_text }}</p>
+                    </div>
+                {% endfor %}
+                <span class="pull-left text-danger">{{ reg_form.non_field_errors }}</span>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+            <div class="form-horizontal_register">
+                Already have an account? <a href="{% url 'login' %}"><button type="submit" class="btn btn-success">Login</button></a>&nbsp&nbsp
+                <a href="{% url 'reset_password' %}" >Forgot Password?</a>
+                <a href="{% provider_login_url 'google' %}">Login with Google</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
